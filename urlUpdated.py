@@ -1,5 +1,4 @@
 import time, os, hashlib, json, re, requests
-import requests
 from bs4 import BeautifulSoup
 from twilio.rest import Client
 
