@@ -61,8 +61,7 @@ def check_url(url, url_hash, hashes):
         if page_hash != hashes[url_hash]:
                 domain_name = (re.search(r'://([A-Za-z_0-9.-]+).*', url))
                 message = f'{domain_name.group(1)} changed: \n\n{url}'
-                print(f"Sent {message}")
-                #send_sms(message)
+                send_sms(message)
                 return update_hash(url_hash, page_hash, hashes)
         else: return False
             
