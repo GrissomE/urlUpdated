@@ -1,4 +1,3 @@
-from distutils.log import error
 import time, os, hashlib, json, re, requests
 import requests
 from bs4 import BeautifulSoup
@@ -9,7 +8,6 @@ def log(text):
 
 def error(text, exception):
     log(f'{text} while {exception.with_traceback}')
-
 
 def load_json(filename):
     try: 
@@ -46,16 +44,14 @@ def send_sms(text):
 
 def parse_page(page):
     soup = BeautifulSoup(page, 'html.parser')
-    for tag in soup.find_all('script'):
-        tag.extract()
-    return soup
+    return soup.getText()
 
 def get_page(url):
     #Chrome User Agent
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36'}
     page = requests.get(url, headers=headers)
     bs = parse_page(page.text)
-    return bs.body.encode('utf-8')
+    return bs.encode('utf-8')
 
 def init_url(url, url_hash, hashes):
     response = get_page(url)
@@ -83,8 +79,8 @@ def check_url(url, url_hash, hashes):
 
 if __name__ == "__main__":
     secrets = load_json('twilio.json')
-    urls    = load_json('urls.json')
     hashes  = load_json('hashes.json')
+    urls    = load_json('urls.json')
     updated_hash = False
 
     for url in urls:
