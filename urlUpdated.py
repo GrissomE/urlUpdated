@@ -1,5 +1,6 @@
-import time, os, hashlib, json, re
-from urllib.request import urlopen, Request
+import time, os, hashlib, json, re, requests
+import requests
+from bs4 import BeautifulSoup
 from twilio.rest import Client
 
 
@@ -30,9 +31,18 @@ def send_sms(text):
     except Exception as e:
         print(f'{time.strftime("%Y %m %d - %H:%M:%S")} Failed sending SMS: {e.with_traceback}')
 
+def parse_page(page):
+    soup = BeautifulSoup(page, 'html.parser')
+    for tag in soup.find_all('script'):
+        tag.extract()
+    return soup
+
 def get_page(url):
-    req = Request(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36'})
-    return urlopen(req).read()
+    #Chrome User Agent
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36'}
+    page = requests.get(url, headers=headers)
+    bs = parse_page(page.text)
+    return bs.body.encode('utf-8')
 
 def init_url(url, url_hash, hashes):
     response = get_page(url)
@@ -51,7 +61,8 @@ def check_url(url, url_hash, hashes):
         if page_hash != hashes[url_hash]:
                 domain_name = (re.search(r'://([A-Za-z_0-9.-]+).*', url))
                 message = f'{domain_name.group(1)} changed: \n\n{url}'
-                send_sms(message)
+                print(f"Sent {message}")
+                #send_sms(message)
                 return update_hash(url_hash, page_hash, hashes)
         else: return False
             
