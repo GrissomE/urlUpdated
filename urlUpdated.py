@@ -1,18 +1,31 @@
+from distutils.log import error
 import time, os, hashlib, json, re, requests
 import requests
 from bs4 import BeautifulSoup
 from twilio.rest import Client
 
+def log(text):
+    print(f'{time.strftime("%Y %m %d - %H:%M:%S")}: {text}')
+
+def error(text, exception):
+    log(f'{text} while {exception.with_traceback}')
+
 
 def load_json(filename):
-    file_abs_path = os.path.dirname(os.path.abspath(__file__))
-    with open(os.path.join(file_abs_path, filename), encoding='utf-8') as file:
-        return json.load(file)
+    try: 
+        file_abs_path = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(file_abs_path, filename), encoding='utf-8') as file:
+            return json.load(file)
+    except Exception as e:
+        error(f'Failed to load file {filename}', e)
 
 def write_json(filename, contents):
-    file_abs_path = os.path.dirname(os.path.abspath(__file__))
-    with open(os.path.join(file_abs_path, filename), 'w') as file:
-        json.dump(contents, file)
+    try: 
+        file_abs_path = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(file_abs_path, filename), 'w') as file:
+            json.dump(contents, file)
+    except Exception as e:
+        error(f'Failed to write file {filename}', e)
 
 def send_sms(text):
     account_sid = secrets["SID"]
@@ -27,9 +40,9 @@ def send_sms(text):
             from_=from_num,
             body=text)
         
-        print(f'{time.strftime("%Y %m %d - %H:%M:%S")} Notified {message.sid}')
+        log(f'Notified {message.sid}')
     except Exception as e:
-        print(f'{time.strftime("%Y %m %d - %H:%M:%S")} Failed sending SMS: {e.with_traceback}')
+        error(f'Failed sending SMS', e)
 
 def parse_page(page):
     soup = BeautifulSoup(page, 'html.parser')
@@ -66,7 +79,7 @@ def check_url(url, url_hash, hashes):
         else: return False
             
     except Exception as e:
-        print(f'{time.strftime("%Y %m %d - %H:%M:%S")} Failed checking URL: {url} at {e.with_traceback}')
+        error(f'Failed checking URL: {url}', e)
 
 if __name__ == "__main__":
     secrets = load_json('twilio.json')
