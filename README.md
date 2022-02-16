@@ -13,14 +13,12 @@ Add URLs to check via the urls.json file to begin tracking them
 ```
 ### SMS Config
 Go to [Twilio](https://www.twilio.com/docs/sms/quickstart/python) and create an account (Promocode: TWILIOQUEST may give some free credits, [not an affiliate link](https://www.twilio.com/quest)).
-Then fill in the SID and API Key, and To/From config options in the twilio.json file. 
+Then fill in the SID and API Key, and To/From config options in a [.env file](https://www.twilio.com/blog/environment-variables-python). 
 "To" will be the destination phone number, and "From" will be the number registered on Twilio.
-```json
-{
-    "SID":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    "Key":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    "To": "+11234567890",
-    "From": "+11234567890"
-}
+```
+  From =  "+11234567890"
+  SID  = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  Key  = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  To   = "+11234567890",
 ```
 

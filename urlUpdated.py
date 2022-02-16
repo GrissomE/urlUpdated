@@ -1,6 +1,7 @@
 import time, os, hashlib, json, re, requests
 from bs4 import BeautifulSoup
 from twilio.rest import Client
+from dotenv import load_dotenv
 
 def log(text):
     print(f'{time.strftime("%Y %m %d - %H:%M:%S")}: {text}')
@@ -25,10 +26,11 @@ def write_json(filename, contents):
         error(f'Failed to write file {filename}', e)
 
 def send_sms(text):
-    account_sid = secrets["SID"]
-    auth_token  = secrets["Key"]
-    from_num    = secrets["From"]
-    dest        = secrets["To"]
+    load_dotenv()
+    account_sid = os.environ["SID"]
+    auth_token  = os.environ["Key"]
+    from_num    = os.environ["From"]
+    dest        = os.environ["To"]
 
     try: 
         client = Client(account_sid, auth_token)
@@ -77,7 +79,6 @@ def check_url(url, url_hash, hashes):
         error(f'Failed checking URL: {url}', e)
 
 if __name__ == "__main__":
-    secrets = load_json('twilio.json')
     hashes  = load_json('hashes.json')
     urls    = load_json('urls.json')
     updated_hash = False
