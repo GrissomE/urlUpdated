@@ -17,8 +17,8 @@ Then fill in the SID and API Key, and To/From config options in a [.env file](ht
 "To" will be the destination phone number, and "From" will be the number registered on Twilio.
 ```
   From =  "+11234567890"
-  SID  = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-  Key  = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-  To   = "+11234567890",
+  SID  = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  Key  = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  To   = "+11234567890"
 ```
 
